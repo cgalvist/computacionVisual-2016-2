@@ -8,9 +8,10 @@ public class Taller2 extends PApplet{
     
     PImage img, zoom;
     
-    int ancho = 1000, alto = 800;
-    final int anchoZoom = (ancho / 5), altoZoom = (alto / 5);
-    float numZoom = 1.0f;
+    int escala = 5;
+    int ancho = 900, alto = 700;
+    int anchoZoom = (ancho / escala), altoZoom = (alto / escala);
+    float numZoom = 1.0f, rotacion = 0;
     
     @Override
     public void settings(){
@@ -27,36 +28,42 @@ public class Taller2 extends PApplet{
     public void draw() {
         background(0);
         
-        image(zoom, 0, 0);
+        rotate(rotacion);
+        scale(numZoom);
+        image(zoom, 0, 0, ancho, alto);
+        
+        rotate(-rotacion);
+        scale(1 / numZoom);
         image(img, 0, 0, anchoZoom, altoZoom);
         
-        if(mouseX > anchoZoom || mouseY > altoZoom){
+        if(mouseX > anchoZoom || mouseY > altoZoom || mouseX < 0 || mouseY < 0){
             numZoom = 1;
+            rotacion = 0;
         } else {
-//            zoom = img.get(mouseX,mouseY,Math.round(ancho * numZoom),Math.round(alto * numZoom));
-            zoom = img.get(mouseX * (ancho / anchoZoom),mouseY * (alto / altoZoom),ancho,alto);
-//            scale(numZoom);
-            zoom.resize(Math.round(ancho * numZoom),Math.round(alto * numZoom));
+            zoom = img.get(mouseX * (escala), mouseY * (escala),ancho,alto);
         }
-        
-        image(zoom, 0, 0);
-        image(img, 0, 0, anchoZoom, altoZoom);
     }
     
-//    @Override
-//    public void mousePressed() {
-//    }
+    @Override
+    public void mousePressed(MouseEvent event) {
+        if(mouseButton == LEFT){
+            rotacion += PI / 16.0f;
+        }
+        if(mouseButton == RIGHT){
+            rotacion += - PI / 16.0f;
+        }
+    }
     
     @Override
     public void mouseWheel(MouseEvent event) {
-        if(numZoom >= 1){
+        if(numZoom > 0.05f){
             if(event.getCount() == -1){
-                numZoom += 0.5;
+                numZoom += 0.05f;
             } else {
-                numZoom -= 0.5;
+                numZoom -= 0.05f;
             }
         } else {
-            numZoom = 1;
+            numZoom = 0.051f;
         }
     }
     
