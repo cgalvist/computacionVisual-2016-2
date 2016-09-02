@@ -4,24 +4,24 @@ float cubeSize = 500;
 
 
 void setup() {
-  size(640, 360,P3D);
+  size(800, 600, P3D);
   flock = new Flock();
   // Add an initial set of boids into the system
   for (int i = 0; i < 150; i++) {
-    flock.addBoid(new Boid(cubeSize/2,cubeSize/2,cubeSize/2));
+    flock.addBoid(new Boid(cubeSize/2, cubeSize/2, cubeSize/2));
   }
 }
 
 void draw() {
   background(50);
-    
+
   //navegacion 3d con mouse
   translate(camX, camY, camZ);
   translate(width/2.0-camX, height/2.0-camY);
   rotateY(rotY);
   rotateX(rotX);
   translate(-(width/2.0-camX), -(height/2.0-camY));
-  
+
   //dibujar cubo
   noFill();
   stroke(0);
@@ -29,7 +29,7 @@ void draw() {
   translate(cubeSize/2, cubeSize/2, cubeSize/2);
   box(cubeSize);
   popMatrix();
-  
+
   flock.run();
 }
 
@@ -53,11 +53,6 @@ void mouseDragged()
   }
 }
 
-// agregar un nuevo boid al hacer clic
-void mousePressed() {
-  flock.addBoid(new Boid(mouseX,mouseY, 0));
-}
-
 class Flock {
   ArrayList<Boid> boids;
 
@@ -74,7 +69,6 @@ class Flock {
   void addBoid(Boid b) {
     boids.add(b);
   }
-
 }
 
 class Boid {
@@ -102,7 +96,7 @@ class Boid {
   void run(ArrayList<Boid> boids) {
     flock(boids);
     update();
-    borders();
+    //borders();
     render();
   }
 
@@ -159,7 +153,7 @@ class Boid {
     // Draw a triangle rotated in the direction of velocity
     float theta = velocity.heading() + radians(90);
     // heading2D() above is now heading() but leaving old syntax until Processing.js catches up
-    
+
     fill(200, 100);
     stroke(255);
     pushMatrix();
@@ -174,17 +168,18 @@ class Boid {
   }
 
   // Wraparound
-  void borders() {
+  /*void borders() {
     if (location.x < -r) location.x = cubeSize+r;
     if (location.y < -r) location.y = cubeSize+r;
     if (location.z < -r) location.z = cubeSize+r;
     if (location.x > cubeSize+r) location.x = -r;
     if (location.y > cubeSize+r) location.y = -r;
     if (location.z > cubeSize+r) location.z = -r;
-  }
+  }*/
 
   // Separation
-  // Method checks for nearby boids and steers away
+  // comprueba boids cercanos y se aleja de ellos
+  // tambien se aleja de las paredes del cubo
   PVector separate (ArrayList<Boid> boids) {
     float desiredseparation = 25.0f;
     PVector steer = new PVector(0, 0, 0);
@@ -202,6 +197,60 @@ class Boid {
         count++;            // Keep track of how many
       }
     }
+
+    // alejar de las paredes
+    float distancia;
+    float separacionPared = 35.0f;
+
+    distancia = location.x;
+    if((distancia < separacionPared) || distancia < 0){
+        PVector diff = new PVector(distancia, 0, 0);
+        diff.normalize();
+        diff.div(distancia);
+        steer.add(diff);
+        count++;
+    }
+    distancia = cubeSize - location.x;
+    if((distancia < separacionPared) || distancia > cubeSize){
+        PVector diff = new PVector(-distancia, 0, 0);
+        diff.normalize();
+        diff.div(distancia);
+        steer.add(diff);
+        count++;
+    }
+    distancia = location.y;
+    if((distancia < separacionPared) || distancia < 0){
+        PVector diff = new PVector(0, distancia, 0);
+        diff.normalize();
+        diff.div(distancia);
+        steer.add(diff);
+        count++;
+    }
+    distancia = cubeSize - location.y;
+    if((distancia < separacionPared) || distancia > cubeSize){
+        PVector diff = new PVector(0, -distancia, 0);
+        diff.normalize();
+        diff.div(distancia);
+        steer.add(diff);
+        count++;
+    }
+    distancia = location.z;
+    if((distancia < separacionPared) || distancia < 0){
+        PVector diff = new PVector(0, 0, distancia);
+        diff.normalize();
+        diff.div(distancia);
+        steer.add(diff);
+        count++;
+    }
+    distancia = cubeSize - location.z;
+    if((distancia < separacionPared) || distancia > cubeSize){
+        PVector diff = new PVector(0, 0, -distancia);
+        diff.normalize();
+        diff.div(distancia);
+        steer.add(diff);
+        count++;
+    }
+
     // Average -- divide by how many
     if (count > 0) {
       steer.div((float)count);
@@ -247,8 +296,7 @@ class Boid {
       PVector steer = PVector.sub(sum, velocity);
       steer.limit(maxforce);
       return steer;
-    } 
-    else {
+    } else {
       return new PVector(0, 0, 0);
     }
   }
