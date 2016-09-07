@@ -1,5 +1,5 @@
-# computacionGrafica-2016-2
-trabajos y talleres de computación gráfica
+# computacionVisual-2016-2
+trabajos y talleres de computación visual
 
 Grupo de trabajo:
 
