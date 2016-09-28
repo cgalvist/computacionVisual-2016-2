@@ -42,6 +42,10 @@ void draw(){
   fill(255, 0, 0);
   noStroke();
   dibujarPuntos(coordsTemp);
+    
+  noFill();
+  stroke(0);
+  dibujarCuadros(coordsTemp);
   
   temp = (temp + PI/5.0) % TWO_PI;
   
@@ -65,6 +69,27 @@ void dibujarPuntos(int[] coords){
   for (int j = 0; j < numLineas; j++) {
     for (int i = 0; i < coords.length; i += 2) {
       ellipse(coords[i], coords[i + 1] + (j * distLineas), 3, 3);
+      System.out.print("(" + coords[i] + "," + (coords[i + 1] + (j * distLineas)) + ")");
+    }
+    System.out.println();
+  }
+}
+
+void dibujarCuadros(int[] coords){
+  
+  int x, y, xAncho, yAncho;
+  
+  for (int j = 0; j < numLineas - 1; j++) {
+    for (int i = 0; i < coords.length; i += 2) {
+      
+      if((i + 3) <= coords.length){
+        x = coords[i];
+        y = coords[i + 1] + (j * distLineas);
+        xAncho = coords[i + 2] - x;
+        yAncho = coords[i + 3] + ((j + 1) * distLineas) - y;
+        
+        rect(x, y, xAncho, yAncho);
+      }
     }
   }
 }
