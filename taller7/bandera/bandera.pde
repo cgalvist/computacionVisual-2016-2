@@ -7,33 +7,35 @@ int[] coords = {
 */
 int[] coords = {
   100, 10, 
-  125, 12, 
-  150, 14, 
-  175, 16, 
-  200, 17,
-  225, 18,
-  250, 20,
-  275, 23,
-  300, 26,
-  325, 23, 
-  350, 20, 
-  375, 18, 
-  400, 17, 
-  425, 16,
-  450, 14,
-  475, 12,
-  500, 10,
+  110, 12, 
+  120, 14, 
+  130, 16, 
+  140, 17,
+  150, 18,
+  160, 20,
+  170, 23,
+  180, 26,
+  190, 23, 
+  200, 20, 
+  210, 18, 
+  220, 17, 
+  230, 16,
+  240, 14,
+  250, 12,
+  260, 10,
 };
 
 int[] coordsTemp;
 
 float temp = PI/5.0;
-int numLineas = 5, distLineas = 50;
-int inicioX, inicioY, indX = -1, indY = -1;
-int pixelesInterval = 15;
+int numLineas = 4, distLineas = 50;
+int indX = -1, indY = -1;
+int pixelesInterval = 5;
+int corrimientoY = 100;
+
 
 void setup() {
-  size(600, 400);
+  size(400, 400);
   background(255);
   smooth();
   noFill();
@@ -48,7 +50,7 @@ void draw(){
   
   // calcular el cambio del eje Y con el paso del tiempo
   for (int i = 1; i < coords.length; i+=2) {
-    coordsTemp[i] = Math.round((float) coords[i] * (sin(temp + (i/4.0))) + 100);
+    coordsTemp[i] = Math.round((float) coords[i] * (sin(temp + (i/4.0))) + corrimientoY);
     //System.out.print(coordsTemp[i] + ", ");
   }  
   //System.out.println();
@@ -70,7 +72,7 @@ void draw(){
   noStroke();
   dibujarPuntos(coordsTemp);
   
-  temp = (temp + PI/5.0) % TWO_PI;
+  temp = (temp + PI/10.0) % TWO_PI;
   
   delay(100);
 }
@@ -119,28 +121,40 @@ void dibujarCuadros(int[] coords){
 
 @Override
 public void mousePressed() {
-  //inicioX = mouseX;
-  //inicioY = mouseY;
   
-  for(int i = 0; i < coords.length; i += 2){
-    if(coordsTemp[i] > mouseX - pixelesInterval && coordsTemp[i] < mouseX + pixelesInterval){
-      indX = i;
-    }
-    if(coordsTemp[i + 1] > mouseY - pixelesInterval && coordsTemp[i + 1] < mouseY + pixelesInterval){
-      indY = i + 1; 
+  if (mouseButton == LEFT){
+    for(int i = 0; i < coords.length; i += 2){
+      //System.out.println(i + ", " + coordsTemp[i]);
+      if(coordsTemp[i] > (mouseX - pixelesInterval) && 
+          coordsTemp[i] < (mouseX + pixelesInterval)){
+        indX = i;
+      }
+      if(coordsTemp[i + 1] > (mouseY - pixelesInterval) && 
+          coordsTemp[i + 1] < (mouseY + pixelesInterval)){
+        indY = i + 1; 
+      }
+      //System.out.println(indX + ", " + indY);
+      /*
+      if((coordsTemp[i + 1] % distLineas) > ((mouseY - pixelesInterval) % distLineas) && 
+          (coordsTemp[i + 1] % distLineas) < ((mouseY + pixelesInterval) % distLineas)){
+        indY = i + 1; 
+      }
+      */
     }
   }
-  
-  //System.out.println(inicioX + ", " + inicioY);
+  if (mouseButton == RIGHT){
+    coordsTemp = coords.clone();
+  }
 }
 
 @Override
 public void mouseDragged() {
-  
-  if(indX > 0 && indY > 0){
-    coordsTemp[indX] = mouseX;
-    coordsTemp[indY] = mouseY + 100;
-  }
+  if (mouseButton == LEFT){
+    if(indX > 0 && indY > 0){
+      coordsTemp[indX] = mouseX;
+      coordsTemp[indY] = mouseY + corrimientoY;
+    }
+  }  
 }
 
 @Override
