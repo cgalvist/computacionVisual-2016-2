@@ -1,31 +1,53 @@
 // bandera usando splines
 
+/*
 int[] coords = {
   100, 10, 125, 17, 150, 20, 175, 17, 200, 10
 };
-
-int[] coordsTemp = {
-  100, 10, 125, 17, 150, 20, 175, 17, 200, 10
+*/
+int[] coords = {
+  100, 10, 
+  125, 12, 
+  150, 14, 
+  175, 16, 
+  200, 17,
+  225, 18,
+  250, 20,
+  275, 23,
+  300, 26,
+  325, 23, 
+  350, 20, 
+  375, 18, 
+  400, 17, 
+  425, 16,
+  450, 14,
+  475, 12,
+  500, 10,
 };
+int[] coordsTemp;
 
 float temp = PI/5.0;
-int numLineas = 5, distLineas = 20;
+int numLineas = 5, distLineas = 50;
 
 void setup() {
-  size(300, 300);
+  size(600, 400);
   background(255);
   smooth();
   noFill();
+  
+  coordsTemp = coords.clone();
 }
 
 void draw(){
   clear();
   background(255);
   
+  
+  // calcular el cambio del eje y con el paso del tiempo
   for (int i = 1; i < coords.length; i+=2) {
-    coordsTemp[i] = Math.round((float) coords[i] * (sin(temp + (PI/4.0) + i)) + 100);
+    coordsTemp[i] = Math.round((float) coords[i] * (sin(temp + (i/4))) + 100);
     //System.out.print(coordsTemp[i] + ", ");
-  }
+  }  
   //System.out.println();
   
   /*
@@ -37,19 +59,17 @@ void draw(){
   
   noFill();
   stroke(0);
+  dibujarCuadros(coordsTemp);
+  fill(255, 0, 0);
   dibujarSpline(coordsTemp);
       
   fill(255, 0, 0);
   noStroke();
   dibujarPuntos(coordsTemp);
-    
-  noFill();
-  stroke(0);
-  dibujarCuadros(coordsTemp);
   
   temp = (temp + PI/5.0) % TWO_PI;
   
-  delay(200);
+  delay(100);
 }
 
 void dibujarSpline(int[] coords){
@@ -69,9 +89,9 @@ void dibujarPuntos(int[] coords){
   for (int j = 0; j < numLineas; j++) {
     for (int i = 0; i < coords.length; i += 2) {
       ellipse(coords[i], coords[i + 1] + (j * distLineas), 3, 3);
-      System.out.print("(" + coords[i] + "," + (coords[i + 1] + (j * distLineas)) + ")");
+      //System.out.print("(" + coords[i] + "," + (coords[i + 1] + (j * distLineas)) + ")");
     }
-    System.out.println();
+    //System.out.println();
   }
 }
 
@@ -86,7 +106,7 @@ void dibujarCuadros(int[] coords){
         x = coords[i];
         y = coords[i + 1] + (j * distLineas);
         xAncho = coords[i + 2] - x;
-        yAncho = coords[i + 3] + ((j + 1) * distLineas) - y;
+        yAncho = coords[i + 1] + ((j + 1) * distLineas) - y;
         
         rect(x, y, xAncho, yAncho);
       }
