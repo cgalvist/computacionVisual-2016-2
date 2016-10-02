@@ -24,10 +24,13 @@ int[] coords = {
   475, 12,
   500, 10,
 };
+
 int[] coordsTemp;
 
 float temp = PI/5.0;
 int numLineas = 5, distLineas = 50;
+int inicioX, inicioY, indX = -1, indY = -1;
+int pixelesInterval = 15;
 
 void setup() {
   size(600, 400);
@@ -43,9 +46,9 @@ void draw(){
   background(255);
   
   
-  // calcular el cambio del eje y con el paso del tiempo
+  // calcular el cambio del eje Y con el paso del tiempo
   for (int i = 1; i < coords.length; i+=2) {
-    coordsTemp[i] = Math.round((float) coords[i] * (sin(temp + (i/4))) + 100);
+    coordsTemp[i] = Math.round((float) coords[i] * (sin(temp + (i/4.0))) + 100);
     //System.out.print(coordsTemp[i] + ", ");
   }  
   //System.out.println();
@@ -60,7 +63,7 @@ void draw(){
   noFill();
   stroke(0);
   dibujarCuadros(coordsTemp);
-  fill(255, 0, 0);
+  stroke(0, 200, 0);
   dibujarSpline(coordsTemp);
       
   fill(255, 0, 0);
@@ -112,4 +115,35 @@ void dibujarCuadros(int[] coords){
       }
     }
   }
+}
+
+@Override
+public void mousePressed() {
+  //inicioX = mouseX;
+  //inicioY = mouseY;
+  
+  for(int i = 0; i < coords.length; i += 2){
+    if(coordsTemp[i] > mouseX - pixelesInterval && coordsTemp[i] < mouseX + pixelesInterval){
+      indX = i;
+    }
+    if(coordsTemp[i + 1] > mouseY - pixelesInterval && coordsTemp[i + 1] < mouseY + pixelesInterval){
+      indY = i + 1; 
+    }
+  }
+  
+  //System.out.println(inicioX + ", " + inicioY);
+}
+
+@Override
+public void mouseDragged() {
+  
+  if(indX > 0 && indY > 0){
+    coordsTemp[indX] = mouseX;
+    coordsTemp[indY] = mouseY + 100;
+  }
+}
+
+@Override
+public void mouseReleased(){
+  indX = indY = -1; 
 }
