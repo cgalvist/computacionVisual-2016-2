@@ -49,10 +49,11 @@ void draw(){
   
   
   // calcular el cambio del eje Y con el paso del tiempo
+  /*
   for (int i = 1; i < coords.length; i+=2) {
     coordsTemp[i] = Math.round((float) coords[i] * (sin(temp + (i/4.0))) + corrimientoY);
     //System.out.print(coordsTemp[i] + ", ");
-  }  
+  }*/  
   //System.out.println();
   
   /*
@@ -123,7 +124,7 @@ void dibujarCuadros(int[] coords){
 public void mousePressed() {
   
   if (mouseButton == LEFT){
-    for(int i = 0; i < coords.length; i += 2){
+    for(int i = 0; i < coordsTemp.length; i += 2){
       //System.out.println(i + ", " + coordsTemp[i]);
       if(coordsTemp[i] > (mouseX - pixelesInterval) && 
           coordsTemp[i] < (mouseX + pixelesInterval)){
@@ -150,9 +151,9 @@ public void mousePressed() {
 @Override
 public void mouseDragged() {
   if (mouseButton == LEFT){
-    if(indX > 0 && indY > 0){
+    if(indX >= 0 && indY >= 0){
       coordsTemp[indX] = mouseX;
-      coordsTemp[indY] = mouseY + corrimientoY;
+      coordsTemp[indY] = mouseY;
     }
   }  
 }
