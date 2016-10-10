@@ -25,13 +25,14 @@ int[] coords = {
   260, 10,
 };
 
-int[] coordsTemp;
+int[] coordsTemp, coords2;
 
 float temp = PI/5.0;
 int numLineas = 4, distLineas = 50;
 int indX = -1, indY = -1;
 int pixelesInterval = 5;
 int corrimientoY = 100;
+boolean movimiento = true;
 
 
 void setup() {
@@ -41,6 +42,7 @@ void setup() {
   noFill();
   
   coordsTemp = coords.clone();
+  coords2 = coords.clone();
 }
 
 void draw(){
@@ -49,11 +51,12 @@ void draw(){
   
   
   // calcular el cambio del eje Y con el paso del tiempo
-  /*
-  for (int i = 1; i < coords.length; i+=2) {
-    coordsTemp[i] = Math.round((float) coords[i] * (sin(temp + (i/4.0))) + corrimientoY);
-    //System.out.print(coordsTemp[i] + ", ");
-  }*/  
+  if(movimiento){
+    for (int i = 1; i < coords.length; i+=2) {
+      coordsTemp[i] = Math.round((float) coords2[i] * (sin(temp + (i/4.0))) + corrimientoY);
+      //System.out.print(coordsTemp[i] + ", ");
+    }
+  }
   //System.out.println();
   
   /*
@@ -131,7 +134,8 @@ public void mousePressed() {
         indX = i;
       }
       if(coordsTemp[i + 1] > (mouseY - pixelesInterval) && 
-          coordsTemp[i + 1] < (mouseY + pixelesInterval)){
+          coordsTemp[i + 1] < (mouseY + pixelesInterval) &&
+          i == indX){
         indY = i + 1; 
       }
       //System.out.println(indX + ", " + indY);
@@ -143,8 +147,16 @@ public void mousePressed() {
       */
     }
   }
+  
+  // reiniciar bandera
   if (mouseButton == RIGHT){
     coordsTemp = coords.clone();
+    coords2 = coords.clone();
+  }
+  
+  // iniciar/detener movimiento
+  if (mouseButton == CENTER){
+    movimiento = !movimiento;
   }
 }
 
@@ -154,6 +166,7 @@ public void mouseDragged() {
     if(indX >= 0 && indY >= 0){
       coordsTemp[indX] = mouseX;
       coordsTemp[indY] = mouseY;
+      coords2[indY] = mouseY - corrimientoY;
     }
   }  
 }
