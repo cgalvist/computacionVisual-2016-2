@@ -5,10 +5,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import processing.core.PApplet;
+import processing.core.PShape;
+import processing.core.PVector;
 import static processing.javafx.PSurfaceFX.PApplicationFX.surface;
-import core.PApplet;
-import core.PShape;
-import core.PVector;
+
 
 import remixlab.proscene.Scene;
 
@@ -114,7 +115,8 @@ public class PaintersAlgorithm extends PApplet {
 	}
 
 	public static void main(String args[]) {
-		PApplet.main(PaintersAlgorithm.class.getName());
+            String name = PaintersAlgorithm.class.getName();
+		PApplet.main(name);
 	}
 
 }
